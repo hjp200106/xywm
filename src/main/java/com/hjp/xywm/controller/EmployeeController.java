@@ -1,18 +1,16 @@
 package com.hjp.xywm.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.hjp.xywm.common.R;
 import com.hjp.xywm.entity.Employee;
 import com.hjp.xywm.service.impl.EmployeeServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.http.HttpRequest;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -65,17 +63,70 @@ public class EmployeeController {
         //设置初始密码，需要进行md5加密处理
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
 
-        employee.setCreateTime(LocalDateTime.now());
+       /* employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
 
         Long empId = (Long) request.getSession().getAttribute("employee");
 
         employee.setCreateUser(empId);
         employee.setUpdateUser(empId);
+        使用公共字段自动填充*/
 
         employeeService.save(employee);
 
         return R.success("新增员工成功");
     }
 
+    //员工分页查询
+    @GetMapping("/page")
+    public R<Page> page(int page,int pageSize,String name){
+        log.info("传入的page是{},传入的pageSize是{}，传入的name是{}",page,pageSize,name);
+        //构造分页构造器
+        Page pageInfo=new Page(page,pageSize);
+
+        //构造条件构造器
+        LambdaQueryWrapper<Employee> queryWrapper=new LambdaQueryWrapper();
+        //添加过滤条件
+        //queryWrapper.like(!StringUtils.isEmpty(name),Employee::getName,name);
+         queryWrapper.like(StringUtils.hasLength(name), Employee::getName,name);
+         //添加排序条件
+         queryWrapper.orderByDesc(Employee::getUpdateTime);
+
+         //执行查询
+         employeeService.page(pageInfo,queryWrapper);
+
+         return R.success(pageInfo);
+    }
+    //通用的根据id更新员工操作
+    @PutMapping
+    public R<String> update(HttpServletRequest request,@RequestBody Employee employee){
+        log.info(employee.toString());
+
+        /*Long empId = (Long) request.getSession().getAttribute("employee");
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(empId);
+        使用公共字段自动填充*/
+        employeeService.updateById(employee);
+
+        return R.success("员工信息修改成功");
+    }
+    //更新和添加操作
+         /*   1、点击编辑按钮时，页面跳转到add.html，并在url中携带参数[员工id]
+            2、在add.html页面获取url中的参数[员工id]
+            3、发送ajax请求，请求服务端，同时提交员工id参数
+            4、服务端接收请求，根据员工id查询员工信息，将员工信息以json形式响应给页面
+            5、页面接收服务端响应的json数据，通过VUE的数据绑定进行员工信息回显
+            6、点击保存按钮，发送ajax请求，将页面中的员工信息以json方式提交给服务端
+            7、服务端接收员工信息，并进行处理，完成后给页面响应
+            8、页面接收到服务端响应信息后进行相应处理
+    注意:add.html页面为公共页面，新增员工和编辑员工都是在此页面操作，所以该代码部分与之前添加员工代码对应，不需要重写。*/
+    @GetMapping("/{id}")
+    public R<Employee> getById(@PathVariable Long id){
+        Employee employee = employeeService.getById(id);
+        return R.success(employee);
+    }
+
+
 }
+
+
