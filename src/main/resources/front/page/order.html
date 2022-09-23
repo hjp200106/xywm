@@ -134,7 +134,8 @@
                     const res = await orderAgainApi({id:order.id})
                     if(res.code === 1){
                         window.requestAnimationFrame(()=>{
-                            window.location.href= '../index.html'
+                            /*window.location.href= 'add-order.html'*/
+                            window.location.href= 'user.html'
                         })
                     }else{
                         this.$notify({ type:'warning', message:res.msg});

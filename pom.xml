@@ -20,6 +20,13 @@
     </properties>-->
     <dependencies>
 
+        <!--redis-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -71,6 +78,39 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>1.1.23</version>
+        </dependency>
+        <!--阿里云验证码-->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>4.5.16</version>
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <!--邮件依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!--发送邮件引入jar包-->
+        <dependency >
+            <groupId >javax.mail </groupId >
+            <artifactId >mail </artifactId >
+            <version >1.4.5 </version >
+        </dependency >
+        <dependency >
+            <groupId >com.sun.mail </groupId >
+            <artifactId >javax.mail </artifactId >
+            <version >1.5.5 </version >
+        </dependency >
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+            <version>1.4</version>
         </dependency>
 
     </dependencies>

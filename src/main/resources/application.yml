@@ -1,6 +1,13 @@
 server:
   port: 8080
 spring:
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    #password: root@123456
+    database: 0
+
+
   application:
     name: XYWM
   datasource:
@@ -17,3 +24,5 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: ASSIGN_ID
+XYWM:
+  path: E:\img\
